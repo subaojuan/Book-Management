@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>
+		PDO登录示例
+	</title>
+</head>
+<body>
+<form>
+	<input type="text" name="user" placeholder="用户名" id="user">
+	<input type="password" name="pwd" placeholder="密码" id="pwd">
+	<button type="button" id="login" onclick="logining()">登录</button>
+</form>
+</body>
+</html>
+<script src="jquery.js"></script>
+<script type="text/javascript">
+	var login=$("#login");
+
+	function logining(){
+		$.ajax({
+			type:"GET",
+			dataType:"JSON",
+			url:"handle.php",
+			data:{
+				type:"login",
+				user:$("#user").val(),
+				pwd:$("#pwd").val()
+			},
+			success:function(data){
+				//console.log(data);
+				if(data.code==0){
+					alert("登录成功");
+				}
+				else{
+					alert("登录失败");
+				}
+			}
+		})
+		
+	}
+
+</script>
+<style type="text/css">
+	input{
+		width: 350px;
+		height: 40px;
+		border:1px solid gray;
+		padding-left: 2em;
+		margin-bottom: 4px;
+	}
+	form{
+		width: 350px;
+	}
+	button{
+		width: 380px;
+		height: 40px;
+	}
+</style>

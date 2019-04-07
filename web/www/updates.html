@@ -1,0 +1,119 @@
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>图书管理系统新书修改</title>
+		<link rel="stylesheet" href="../css/css.css" type="text/css">
+	</head>
+
+	<body>
+		<form id="myform" name="myform">
+			<table width="100%" height="173" border="0" align="center" cellpadding="2" cellspacing="1" class="table">
+				<tr>
+					<td colspan="2" align="left" class="bg_tr"> 后台管理 &gt;&gt; 新书修改</td>
+				</tr>
+				<tr>
+					<td width="31%" align="right" class="td_bg">书名：</td>
+					<td width="69%" class="td_bg">
+						<input name="name" type="text" id="name" size="15" maxlength="30" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right" class="td_bg">价格：</td>
+					<td class="td_bg">
+						<input name="price" type="text" id="price" size="5" maxlength="15" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right" class="td_bg">入库时间：
+					</td>
+					<td class="td_bg">
+						<label>
+          <input name="uptime" type="text" id="uptime" size="17" />
+        </label>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" class="td_bg">所属类别：
+					</td>
+					<td class="td_bg">
+						<label>
+          <input name="type" type="text" id="type"  size="6" maxlength="19" />
+        </label>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" class="td_bg">入库总量：</td>
+					<td class="td_bg"><input name="total" type="text" id="total" size="5" maxlength="15" /> 本
+					</td>
+				</tr>
+				<tr>
+					<td align="right" class="td_bg">
+						<input type="button" name="button" id="button" value="提交" /></td>
+					<td class="td_bg">
+						<input type="reset" name="button2" id="button2" value="重置" /></td>
+				</tr>
+			</table>
+		</form>
+	</body>
+
+</html>
+<script src="../js/jquery.js"></script>
+<script type="text/javascript">
+	(function($) {
+		$.getData = function(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]+)(&|$)?");
+			var result = window.location.search.substr(1).match(reg);
+			if(result != null) return result[2];
+			return null;
+		}
+	})(jQuery);
+
+	var bookid = $.getData("id");
+
+	$.ajax({
+		type: 'GET',
+		url: '../lib/handle.php',
+		dataType: 'JSON',
+		data: {
+			type: 'selectwhere',
+			wheres: 'id',
+			coun: bookid
+		},
+		success: function(data) {
+			//console.log(data);
+			if(data.flag == true) {
+				$("input[name='name']").val(data.msg[0].name);
+				$("input[name='price']").val(data.msg[0]['price']);
+				$("input[name='uptime']").val(data.msg[0]['uploadtime']);
+				$("input[name='type']").val(data.msg[0]['type']);
+				$("input[name='total']").val(data.msg[0]['total']);
+			}
+		}
+	});
+
+	$("#button").click(function() {
+		$.ajax({
+			type: 'get',
+			url: '../lib/handle.php',
+			data: {
+				type: 'updates',
+				id: bookid,
+				name: $("input[name='name']").val(),
+				price: $("input[name='price']").val(),
+				uptime: $("input[name='uptime']").val(),
+				btype: $("input[name='type']").val(),
+				total: $("input[name='total']").val()
+			},
+			dataType: 'json',
+			success: function(data) {
+				console.log(data);
+				if(data.flag == true) {
+					alert(data.msg);
+					window.location.href = "list.html";
+				} else
+					alert(data.msg);
+			}
+		});
+	})
+</script>

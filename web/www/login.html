@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>图书后台管理系统注册</title>
+		<link rel="stylesheet" href="../css/login.css" type="text/css">
+	</head>
+
+	<body>
+		<form id="frm" name="frm" method="" action="">
+			<div id="center">
+				<div id="center_middle">
+					<div class="user">
+						<label>用户名：
+				<input type="text" name="username" id="username" />
+			</label>
+					</div>
+					<div class="user">
+						<label>密　码：
+				<input type="password" name="pwd" id="pwd" />
+			</label>
+					</div>
+					<div class="checknumber">
+						<label>验证码：
+				<input name="code" type="text" id="code" maxlength="4" class="checknumber_input" />
+				<img src="../lib/handle.php?type=verify" style="vertical-align:middle" id="code"/>
+<!--src="../lib/handle.php?type=verify"-->
+			</label>
+
+					</div>
+				</div>
+				<div id="center_submit">
+					<div class="button"> <input type="button" onclick="logins()" class="submit" value="登录 ">
+					</div>
+					<div class="button"><input type="reset" name="Submit" class="reset" value="重置"> </div>
+				</div>
+			</div>
+		</form>
+
+	</body>
+
+</html>
+<script src="../js/jquery.js"></script>
+<script type="text/javascript">
+	function logins() {
+		var username = $("input[name='username']").val();
+		var pwd = $("input[name='pwd']").val();
+		var code = $("input[name='code']").val();
+		var type = 'login';
+		var data = { 'username': username, 'pwd': pwd, 'type': type, 'code': code };
+
+		$.ajax({
+			type: 'post',
+			url: '../lib/handle.php',
+			data: data,
+			dataType: 'json',
+			success: function(data) {
+				console.log(data);
+				if(data.flag == true) {
+					alert(data.msg);
+					window.location.href = "index.html";
+
+				} else {
+					alert(data.msg);
+
+				}
+			}
+		});
+	}
+
+$.each(data,function(index,obj){
+	alert(obj.code);
+})
+</script>

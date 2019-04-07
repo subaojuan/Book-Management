@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>图书查询</title>
+		<link rel="stylesheet" href="../css/css.css" type="text/css">
+	</head>
+
+	<body>
+		<table width="80%" border="0" align="center" cellpadding="2" cellspacing="1" class="table">
+			<tr>
+				<td width="80%" height="27" valign="top" bgcolor="#FFFFFF" class="bg_tr"> 后台管理 >> 图书查询</td>
+				<tr>
+					<td height="27" valign="top" bgcolor="#FFFFFF" class="bg_tr">
+						<form id="form1" name="form1" method="post" action="" style="margin:0px; padding:0px;">
+							<table width="45%" height="42" border="0" align="center" cellpadding="0" cellspacing="0" class="bk">
+								<tr>
+									<td width="36%" align="center">
+										<select name="seltype" id="seltype">
+											<option value="id">图书序号</option>
+											<option value="name">图书名称</option>
+											<option value="price">图书价格</option>
+											<option value="type">图书类别</option>
+										</select>
+									</td>
+									<td width="31%" align="center">
+										<input type="text" name="coun" id="coun" />
+									</td>
+									<td width="33%" align="center">
+										<input type="button" onclick="selects()" id="button" value="查询" />
+									</td>
+								</tr>
+							</table>
+						</form>
+					</td>
+				</tr>
+			</tr>
+		</table>
+		<table id="titles" width="80%" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC" class="table">
+			<tr>
+				<td width="7%" height="35" align="center" bgcolor="#FFFFFF">ID</td>
+				<td width="28%" align="center" bgcolor="#FFFFFF">书名</td>
+				<td width="12%" align="center" bgcolor="#FFFFFF">价格</td>
+				<td width="24%" align="center" bgcolor="#FFFFFF">入库时间</td>
+				<td width="12%" align="center" bgcolor="#FFFFFF">类别</td>
+				<td width="24%" align="center" bgcolor="#FFFFFF">操作</td>
+			</tr>
+
+		</table>
+	</body>
+
+</html>
+
+<script src="../js/jquery.js"></script>
+<script>
+	function selects() {
+		var wheres = $("select[name='seltype']").val();
+		var coun = $("input[name='coun']").val();
+		var type = "selectwhere";
+		var table = '<tr><td width="7%" height="35" align="center" bgcolor="#FFFFFF">ID</td><td width="28%" align="center" bgcolor="#FFFFFF">书名</td><td width="12%" align="center" bgcolor="#FFFFFF">价格</td><td width="24%" align="center" bgcolor="#FFFFFF">入库时间</td><td width="12%" align="center" bgcolor="#FFFFFF">类别</td><td width="24%" align="center" bgcolor="#FFFFFF">操作</td></tr>';
+		if(coun == '') {
+			alert("搜索内容不可以为空");
+			return false;
+		}
+		var str = "";
+		$.ajax({
+			type: 'get',
+			url: '../lib/handle.php',
+			data: { 'type': type, 'wheres': wheres, 'coun': coun },
+			dataType: 'json',
+			success: function(data) {
+				$("#titles").html(table);
+				if(data.flag == false) {
+					str = "<tr><td colspan=6>没有符合条件的书籍</td></tr>";
+				} else {
+					$.each(data.msg, function(index, content) {
+						str += "<tr align='center' id='t" + content.id + "'>";
+						str += '<td class="td_bg" width="6%">' + content.id + '</td>';
+						str += '<td class="td_bg" width="25%" height="26">' + content.name + '</td>';
+						str += '<td class="td_bg" width="11%" height="26">' + content.price + '</td>';
+						str += '<td class="td_bg" width="16%" height="26">' + content.uploadtime + '</td>';
+						str += '<td width="11%" height="26" class="td_bg">' + content.type + '</td>';
+						str += '<td class="td_bg" width="20%">';
+						str += '<a href="updates.html?id=' + content.id + '"><button class="trlink">修改</button></a>';
+						str += '<button onclick="dels(' + content.id + ')"class="trlink">删除</button>';
+						str += '</td>';
+						str += '</tr>';
+					});
+				}
+				$("#titles").append(str);
+			}
+		});
+	}
+
+	function dels(id) {
+
+		var type = "dels";
+		var tid = "#t" + id;
+		$.ajax({
+			type: 'post',
+			url: '../lib/handle.php',
+			data: { 'type': type, 'id': id },
+			dataType: 'json',
+			success: function(data) {
+				if(data.flag == true) {
+					alert(data.msg);
+					$(tid).remove();
+				} else {
+					alert(data.msg);
+				}
+			}
+		});
+	}
+</script>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>新书管理功能页</title>
+	<link rel="stylesheet" href="../css/css.css" type="text/css">
+</head>
+
+<body>
+	<table id="titles" width="95%" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC" class="table">
+		<tr>
+			<td height="27" colspan="7" align="left" bgcolor="#FFFFFF" class="bg_tr"> 后台管理 >> 新书管理</td>
+		</tr>
+		<tr id="tabletd">
+			<td width="6%" height="35" align="center" bgcolor="#FFFFFF">ID</td>
+			<td width="25%" align="center" bgcolor="#FFFFFF">书名</td>
+			<td width="11%" align="center" bgcolor="#FFFFFF">价格</td>
+			<td width="16%" align="center" bgcolor="#FFFFFF">入库时间</td>
+			<td width="11%" align="center" bgcolor="#FFFFFF">类别</td>
+			<td width="11%" align="center" bgcolor="#FFFFFF">入库总量</td>
+			<td width="20%" align="center" bgcolor="#FFFFFF">操作</td>
+		</tr>
+
+		<tr>
+			<!--    <tr>
+      <th height="25" colspan="7" align="center" class="bg_tr">
+
+      </th>
+ </tr> -->
+	</table>
+	<div style="text-align: center;" id="pagediv">
+
+	</div>
+
+</body>
+
+</html>
+<script src="../js/jquery.js"></script>
+<script>
+	$(document).ready(function() {
+		getBook();
+	});
+
+	var page = 1; //当前页数
+	var count = 5; //每一页显示的数量
+	var type = "lists";
+	var str = "";
+
+	function getBook() {
+
+		$.ajax({
+			type: 'post',
+			url: '../lib/handle.php',
+			data: {
+				'type': type,
+				'page': page,
+				'count': count
+			},
+			dataType: 'json',
+			success: function(data) {
+				str = " ";
+				console.log(data.msg);
+				$.each(data.msg, function(index, content) {
+					str += "<tr align='center' id='t" + content.id + "'>";
+					str += '<td class="td_bg" width="6%">' + content.id + '</td>';
+					str += '<td class="td_bg" width="25%" height="26">' + content.name + '</td>';
+					str += '<td class="td_bg" width="11%" height="26">' + content.price + '</td>';
+					str += '<td class="td_bg" width="16%" height="26">' + content.uploadtime + '</td>';
+					str += '<td width="11%" height="26" class="td_bg">' + content.type + '</td>';
+					str += '<td width="11%" height="26" class="td_bg">' + content.total + '</td>';
+					str += '<td class="td_bg" width="20%">';
+					str += '<a href="updates.html?id=' + content.id + '"><button class="trlink">修改</button></a>';
+					str += '<button onclick="dels(' + content.id + ')"class="trlink">删除</button>';
+					str += '</td>';
+					str += '</tr>';
+				});
+				$("#tabletd").after(str);
+				for(i = 1; i <= data['pagesum']; i++) {
+					$("#pagediv").append('<a href="javascript:void(0)" onclick="setpage(' + i + ')" >' + i + '</a> ');
+				}
+				$("#pagediv").append('<br><span>查询到' + data['booksum'] + '个结果 共' + data['pagesum'] + '页</span>');
+			}
+		});
+	}
+
+	function dels(id) {
+
+		var type = "dels";
+		var tid = "#t" + id;
+		$.ajax({
+			type: 'post',
+			url: '../lib/handle.php',
+			data: { 'type': type, 'id': id },
+			dataType: 'json',
+			success: function(data) {
+				if(data.flag == true) {
+					alert(data.msg);
+					$(tid).remove();
+				} else {
+					alert(data.msg);
+				}
+
+			}
+		});
+
+	}
+
+	function setpage(index) {
+		page = index;
+		$("#tabletd").nextAll().remove();
+		$("#pagediv").html(" ");
+		getBook();
+
+	}
+</script>

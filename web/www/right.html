@@ -1,0 +1,130 @@
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>图书管理系统</title>
+		<link rel="stylesheet" type="text/css" href="../css/leftright.css" />
+		<style type="text/css">
+			body {
+				background: rgba(0, 194, 255, 0.1);
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<table>
+			<tr>
+				<td>
+					<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#a8c7ce">
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE6">
+								<div align="center"><span class="STYLE19">软件版本</span></div>
+							</td>
+							<td height="20" align="center" bgcolor="#FFFFFF" class="STYLE19">SS3.3
+							</td>
+						</tr>
+						<tr>
+							<td width="23%" height="20" align="left" bgcolor="#FFFFFF" class="STYLE6">
+								<div align="center"><span class="STYLE19">php版本</span></div>
+							</td>
+							<td width="77%" height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center" id="vesion"></div>
+							</td>
+						</tr>
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">服务器名：</div>
+							</td>
+							<td height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center" id="sname"></div>
+							</td>
+						</tr>
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">服务器IP：</div>
+							</td>
+							<td height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center" id="sip"></div>
+							</td>
+						</tr>
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">服务器端口：</div>
+							</td>
+							<td height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center" id="sport"></div>
+							</td>
+						</tr>
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">服务器时间：</div>
+							</td>
+							<td height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center" id="stime"></div>
+							</td>
+						</tr>
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">服务器操作系统：</div>
+							</td>
+							<td height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center" id="soc"></div>
+							</td>
+						</tr>
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">站点物理路径：</div>
+							</td>
+							<td height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center" id="surl"></div>
+							</td>
+						</tr>
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">admin</div>
+							</td>
+							<td height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">系统管理员</div>
+							</td>
+						</tr>
+						<tr>
+							<td height="20" align="left" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">在线使用帮助</div>
+							</td>
+							<td height="20" bgcolor="#FFFFFF" class="STYLE19">
+								<div align="center">查看在线帮助文档</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<table>
+	</body>
+
+</html>
+<script src="../js/jquery.js"></script>
+<script>
+	$(document).ready(function() {
+
+		var type = "right";
+		$.ajax({
+			type: 'post',
+			url: '../lib/handle.php',
+			data: { 'type': type },
+			dataType: 'json',
+			success: function(data) {
+
+				$("#vesion").html(data.vesion);
+				$("#sname").html(data.sname);
+				$("#stime").html(data.stime);
+				$("#sip").html(data.sip);
+				$("#surl").html(data.surl);
+				$("#soc").html(data.soc);
+				$("#sport").html(data.sport);
+			}
+
+		});
+
+	});
+</script>
